@@ -1,20 +1,109 @@
-<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Query and Image Upload Interface</title>
-</head>
-<body>
-    <h1>Send a Query</h1>
-    <form action="http://localhost:8000/process_question/" method="post">
-        <input type="text" name="user_question" placeholder="Enter your question here">
-        <button type="submit">Send Question</button>
-    </form>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CogniLeap Chatbot Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #fff;
+            width: 24px;
+            height: 24px;
+            -webkit-animation: spin 1s linear infinite; /* Safari */
+            animation: spin 1s linear infinite;
+        }
 
-    <h1>Upload Image with Query</h1>
-    <form action="http://localhost:8000/process_image/" method="post" enctype="multipart/form-data">
-        <input type="file" name="image" accept="image/*">
-        <input type="text" name="user_question" placeholder="Enter your question here">
-        <button type="submit">Upload Image and Send Question</button>
-    </form>
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <div class="flex flex-col items-center justify-center h-screen">
+        <h1 class="text-4xl font-semibold mb-10">CogniLeap</h1>
+        <div class="flex items-center mb-6">
+            <input type="text" id="questionInput" placeholder="Ask your question here!" class="bg-gray-800 border border-gray-600 rounded-full w-96 py-3 px-6 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500">
+            <label class="bg-blue-600 hover:bg-blue-700 text-white rounded-full ml-2 px-4 py-3 cursor-pointer">
+                <i class="fas fa-upload"></i>
+                <input type="file" id="imageUpload" class="hidden" onchange="showImagePath()">
+            </label>
+            <button id="submitBtn" onclick="submitQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full ml-2 px-4 py-3 cursor-pointer">
+                Submit
+            </button>
+        </div>
+        <div id="spinner" class="hidden spinner"></div>
+        <div id="imagePath" class="text-gray-400 mt-2"></div>
+        <div id="responseContainer" class="text-white mt-4"></div>
+    </div>
+
+    <script>
+        async function submitQuestion() {
+            var questionInput = document.getElementById('questionInput');
+            var imageUpload = document.getElementById('imageUpload');
+            var formData = new FormData();
+            var spinner = document.getElementById('spinner');
+            var responseContainer = document.getElementById('responseContainer');
+
+            formData.append('user_question', questionInput.value);
+            spinner.classList.remove('hidden');
+            responseContainer.textContent = ''; // Clear previous response
+
+            try {
+                let response;
+                if (imageUpload.files.length > 0) {
+                    formData.append('image', imageUpload.files[0]);
+                    response = await fetch('http://localhost:8000/process_image/', {
+                        method: 'POST',
+                        body: formData
+                    });
+                } else {
+                    let headers = new Headers();
+                    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+                    let urlencoded = new URLSearchParams();
+                    urlencoded.append("user_question", questionInput.value);
+
+                    response = await fetch('http://localhost:8000/process_question/', {
+                        method: 'POST',
+                        headers: headers,
+                        body: urlencoded
+                    });
+                }
+
+                const data = await response.json();
+                responseContainer.textContent = data.response; // Display response
+            } catch (error) {
+                console.error('Error:', error);
+                responseContainer.textContent = 'Error: ' + error.message;
+            } finally {
+                spinner.classList.add('hidden');
+                questionInput.value = '';
+                if (imageUpload.files.length == 0) {
+                    document.getElementById('imagePath').textContent = ''; // Clear image path if no image is uploaded
+                }
+                imageUpload.value = '';
+            }
+        }
+
+
+        function showImagePath() {
+            var imagePath = document.getElementById('imagePath');
+            var imageUpload = document.getElementById('imageUpload');
+            imagePath.textContent = imageUpload.value;
+        }
+    </script>
 </body>
 </html>

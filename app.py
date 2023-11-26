@@ -1,10 +1,20 @@
 from fastapi import FastAPI, UploadFile, File, Form
+from fastapi.middleware.cors import CORSMiddleware
+
 from typing import Optional
 from cohere_chat import cohere_response_request
 from image_understanding import ImageUnderstanding
 import os
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 # load model so it doesn't need to load on first request
 image_understanding = ImageUnderstanding("")  # pass in dummy path
