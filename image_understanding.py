@@ -28,6 +28,9 @@ search_results: "associated search results"
 
 Given all of the above, you are to provide the best possible response and direction to lead the user ot their desired goal.
 <!--> IMPORTANT CONTEXT <--!>
+
+MAKE SURE TO ONLY USE CONTEXT YOU ARE GIVEN AND ASSOCIATED CONTEXT YOU HAVE STORED!!! DO NOT HALLUCINATE BEYOND THE SCOPE OF THE QUESTION!!!
+ALSO NEVER SAY YOU DO NOT KNOW WHAT THE IMAGE IS!!! ASSUME YOU HAVE ABSOLUTE CONTEXT OF THE IMAGE!!!
 """
 
 
