@@ -1,0 +1,22 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+cohere = "*"
+openai = "*"
+fastapi = "*"
+uvicorn = "*"
+torch = "*"
+ftfy = "*"
+regex = "*" 
+tqdm = "*"
+clip = {git = "git+https://github.com/openai/CLIP.git"}
+python-multipart = "*"
+requests = "*"
+
+[requires]
+python_version = "3.11.5"

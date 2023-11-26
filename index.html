@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Query and Image Upload Interface</title>
+</head>
+<body>
+    <h1>Send a Query</h1>
+    <form action="http://localhost:8000/process_question/" method="post">
+        <input type="text" name="user_question" placeholder="Enter your question here">
+        <button type="submit">Send Question</button>
+    </form>
+
+    <h1>Upload Image with Query</h1>
+    <form action="http://localhost:8000/process_image/" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*">
+        <input type="text" name="user_question" placeholder="Enter your question here">
+        <button type="submit">Upload Image and Send Question</button>
+    </form>
+</body>
+</html>
