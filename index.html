@@ -84,7 +84,8 @@
                 }
 
                 const data = await response.json();
-                responseContainer.textContent = data.response; // Display response
+                console.log("Received Data:", data); // Log the received data
+                responseContainer.textContent = data.response || "No response";
             } catch (error) {
                 console.error('Error:', error);
                 responseContainer.textContent = 'Error: ' + error.message;

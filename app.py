@@ -21,7 +21,7 @@ image_understanding = ImageUnderstanding("")  # pass in dummy path
 
 
 @app.post("/process_question/")
-async def process_question(user_question: str = Form(...)):
+async def process_question(user_question: str = Form(None)):
     assert isinstance(user_question, str), "user question must be str"
 
     # Ask question to cohere

@@ -140,6 +140,9 @@ def cohere_response_request(message, image_context: Optional[str] = None):
             # basic chat
             response = co.chat(model='command-light-nightly', message=message)
 
+        if not response.text:
+            raise ValueError("Empty response from Cohere")
+
         return response.text
 
     except Exception as e:
